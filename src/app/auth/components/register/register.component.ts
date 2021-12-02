@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '@app/auth/shared';
+import { AuthService } from '@app/auth/shared';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,7 @@ export class RegisterComponent {
 
   constructor(
     private readonly _fb: FormBuilder,
-    private readonly _userService: UserService
+    private readonly _AuthService: AuthService
   ) {
     this.form = this._fb.group({
       username: [null, Validators.required],
@@ -22,6 +22,6 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.form.valid) this._userService.register(this.form.value);
+    if (this.form.valid) this._AuthService.register(this.form.value);
   }
 }

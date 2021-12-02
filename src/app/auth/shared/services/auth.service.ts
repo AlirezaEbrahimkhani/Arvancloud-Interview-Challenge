@@ -12,7 +12,7 @@ import { environment } from '@env/environment';
 import { LoginModel, RegisterModel, User } from '../interfaces';
 
 @Injectable()
-export class UserService extends SubscriptionManager {
+export class AuthService extends SubscriptionManager {
   private readonly _baseUrl: string = environment.serviceBaseUrl;
   private _currentUser = new BehaviorSubject<User>(null);
 

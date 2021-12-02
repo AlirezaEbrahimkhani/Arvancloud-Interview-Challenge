@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '@app/auth/shared';
+import { AuthService } from '@app/auth/shared';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ export class LoginComponent {
 
   constructor(
     private readonly _fb: FormBuilder,
-    private readonly _userService: UserService
+    private readonly _AuthService: AuthService
   ) {
     this.form = this._fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -23,6 +23,6 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.form.valid) this._userService.login(this.form.value);
+    if (this.form.valid) this._AuthService.login(this.form.value);
   }
 }
