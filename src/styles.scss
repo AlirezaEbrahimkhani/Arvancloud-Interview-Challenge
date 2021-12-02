@@ -1,2 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+@import "./styles-variables.scss";
+
+$primary: #1c7cd5;
+$info: #5bc0de;
+
 @import "bootstrap";
+
+html,
+body {
+  height: 100%;
+}
+
+body,
+table.table,
+.form-label {
+  color: var(--charcoal-grey);
+}
