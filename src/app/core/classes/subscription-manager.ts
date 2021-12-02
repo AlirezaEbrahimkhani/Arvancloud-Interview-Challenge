@@ -2,7 +2,7 @@ import { Directive, OnDestroy } from '@angular/core';
 import { SubscriptionLike } from 'rxjs';
 
 @Directive()
-export class SubscribeManager implements OnDestroy {
+export class SubscriptionManager implements OnDestroy {
   private _subscriptionList = new Map<string, SubscriptionLike>();
 
   public addSubscription$(
