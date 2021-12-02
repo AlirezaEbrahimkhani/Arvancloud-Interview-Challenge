@@ -1,1 +1,62 @@
-<p>login works!</p>
+<div class="login">
+  <div class="login-box">
+    <h1 class="login-box_title">LOGIN</h1>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="email" class="form-label"> Email </label>
+        <input
+          [ngClass]="{
+            ' is-invalid':
+              form.get('email').errors && form.get('email').hasError('required')
+          }"
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            form.get('email').errors && form.get('email').hasError('required')
+          "
+        >
+          This field is required !
+        </div>
+      </div>
+      <div class="password-wrapper">
+        <label for="password" class="form-label"> Password </label>
+        <input
+          [ngClass]="{
+            ' is-invalid':
+              form.get('password').errors &&
+              form.get('password').hasError('required')
+          }"
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            form.get('password').errors &&
+            form.get('password').hasError('required')
+          "
+        >
+          This field is required !
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary mb-3"
+        [disabled]="form.invalid"
+      >
+        Login
+      </button>
+    </form>
+    <p class="register-message">
+      Don’t have account? <strong routerLink="/register">Register Now</strong>
+    </p>
+  </div>
+</div>
