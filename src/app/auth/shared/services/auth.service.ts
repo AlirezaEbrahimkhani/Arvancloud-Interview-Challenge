@@ -27,6 +27,8 @@ export class AuthService extends SubscriptionManager {
     super();
   }
 
+  // TODO: Implement Error handling ...
+
   login(loginModel: LoginModel) {
     let loginSubscription: Subscription = this._httpClient
       .post<{ user: User }>(`${this._baseUrl}users/login`, loginModel)
