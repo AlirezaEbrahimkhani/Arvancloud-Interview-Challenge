@@ -31,17 +31,18 @@ export class AuthService extends SubscriptionManager {
 
   login(loginModel: LoginModel) {
     let loginSubscription: Subscription = this._httpClient
-      .post<{ user: User }>(`${this._baseUrl}users/login`, loginModel)
+      .post<{ user: User }>(`${this._baseUrl}users/login`, { user: loginModel })
       .subscribe(({ user }) => {
         this._currentUser.next(user);
         localStorage.setItem('token', user.token);
+        this._router.navigate(['/articles']);
       });
     this.addSubscription$('login', loginSubscription);
   }
 
   register(registerModel: RegisterModel) {
     let registerSubscription: Subscription = this._httpClient
-      .post(`${this._baseUrl}users`, registerModel)
+      .post(`${this._baseUrl}users`, { user: registerModel })
       .subscribe(() => {
         this._router.navigate(['/login']);
       });
