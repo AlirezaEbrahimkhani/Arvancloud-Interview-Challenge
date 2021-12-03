@@ -6,7 +6,7 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 /** Passes HttpErrorResponse to application-wide error handler */
@@ -14,21 +14,42 @@ import { catchError } from 'rxjs/operators';
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
   intercept(
-    request: HttpRequest<any>,
+    req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
-        let errorMsg: string = '';
-        if (error.error instanceof ErrorEvent) {
-          console.log('this is client side error');
-          errorMsg = `Error: ${error.error.message}`;
-        } else {
-          console.log('this is server side error');
-          errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
+    if (!window.navigator.onLine) {
+      console.error(
+        `Error: Internet connection failed.Please check your internet connection ... !`
+      );
+      return EMPTY;
+    }
+
+    return next.handle(req).pipe(
+      catchError((err: HttpErrorResponse) => {
+        const { status } = err;
+        if (err instanceof HttpErrorResponse && status === 0) {
+          console.error(
+            `Error => Status: ${status} , Message: Server connection error!`
+          );
         }
-        console.log(errorMsg);
-        return throwError(errorMsg);
+
+        if (err instanceof HttpErrorResponse && status === 404) {
+          console.error(
+            `Error => Status: ${status} , Message: Cannot find service!`
+          );
+        }
+
+        if (err instanceof HttpErrorResponse && status === 401) {
+          console.error(
+            `Error => Status: ${status} , Message: Permission denied!`
+          );
+        }
+
+        console.error(
+          `Error => Status: ${status} , Message: Error while connecting to service!`
+        );
+
+        return throwError(err);
       })
     );
   }
