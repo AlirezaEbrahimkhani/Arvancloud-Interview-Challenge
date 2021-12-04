@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ArticleListComponent, LayoutComponent } from './components';
+
 import { ArticleResolver } from './shared/resolvers/articles.resolver';
+import {
+  ArticleFormComponent,
+  ArticleListComponent,
+  LayoutComponent,
+} from './components';
 
 const ROUTES: Routes = [
   {
@@ -14,6 +19,14 @@ const ROUTES: Routes = [
         resolve: {
           articles: ArticleResolver,
         },
+      },
+      {
+        path: 'edit/:slug',
+        component: ArticleFormComponent,
+      },
+      {
+        path: 'create',
+        component: ArticleFormComponent,
       },
     ],
   },
