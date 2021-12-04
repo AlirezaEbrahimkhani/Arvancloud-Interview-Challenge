@@ -38,7 +38,7 @@ export class AuthService extends SubscriptionManager {
   public login(loginModel: LoginModel) {
     let loginSubscription: Subscription = this._httpClient
       .post<{ user: User }>(`${this._baseUrl}users/login`, { user: loginModel })
-      .pipe(catchError(this._handleLoginError))
+      .pipe(catchError((error) => this._handleLoginError(error)))
       .subscribe(({ user }) => {
         this._currentUser.next(user);
         localStorage.setItem('token', user.token);
@@ -50,7 +50,7 @@ export class AuthService extends SubscriptionManager {
   public register(registerModel: RegisterModel) {
     let registerSubscription: Subscription = this._httpClient
       .post(`${this._baseUrl}users`, { user: registerModel })
-      .pipe(catchError(this._handleRegistrationError))
+      .pipe(catchError((error) => this._handleRegistrationError(error)))
       .subscribe(() => {
         this._router.navigate(['/login']);
       });
