@@ -7,6 +7,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { catchError } from 'rxjs/operators';
+import { Toaster } from '@shared/toast-notification';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,10 @@ import { catchError } from 'rxjs/operators';
 export class HttpBaseService {
   private readonly BASE_URL: string = environment.serviceBaseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _toaster: Toaster
+  ) {}
 
   public get$<R>(url: string): Observable<R> {
     return this._httpRequest(url, 'GET');
@@ -48,19 +52,19 @@ export class HttpBaseService {
     const headers = this._getHttpHeaders();
     switch (httpVerb) {
       case 'GET':
-        return this.http
+        return this._http
           .get(URL)
           .pipe(catchError((error) => this._errorHandler(error)));
       case 'POST':
-        return this.http
+        return this._http
           .post(URL, body, { headers })
           .pipe(catchError((error) => this._errorHandler(error)));
       case 'PUT':
-        return this.http
+        return this._http
           .put(URL, body, { headers })
           .pipe(catchError((error) => this._errorHandler(error)));
       case 'DELETE':
-        return this.http
+        return this._http
           .delete(URL, { headers })
           .pipe(catchError((error) => this._errorHandler(error)));
     }
@@ -68,7 +72,11 @@ export class HttpBaseService {
 
   private _errorHandler(error: HttpErrorResponse) {
     const { status, message } = error;
-    console.error(`Http Error => Status: ${status} , Message: ${message}`);
+    this._toaster.open({
+      type: 'danger',
+      caption: `Status: ${status}`,
+      text: `${message}`,
+    });
     return throwError(error);
   }
 }

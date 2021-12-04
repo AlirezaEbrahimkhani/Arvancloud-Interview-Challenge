@@ -8,19 +8,24 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Toaster } from '@shared/toast-notification';
 
 /** Passes HttpErrorResponse to application-wide error handler */
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+  constructor(private readonly _toaster: Toaster) {}
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (!window.navigator.onLine) {
-      console.error(
-        `Error: Internet connection failed.Please check your internet connection ... !`
-      );
+      this._toaster.open({
+        type: 'danger',
+        caption: 'Internet connection failed',
+        text: 'Please check your internet connection ... !',
+      });
       return EMPTY;
     }
 
@@ -28,26 +33,33 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       catchError((err: HttpErrorResponse) => {
         const { status } = err;
         if (err instanceof HttpErrorResponse && status === 0) {
-          console.error(
-            `Error => Status: ${status} , Message: Server connection error!`
-          );
+          this._toaster.open({
+            type: 'danger',
+            caption: `Status: ${status}`,
+            text: 'Server connection error!',
+          });
         }
 
         if (err instanceof HttpErrorResponse && status === 404) {
-          console.error(
-            `Error => Status: ${status} , Message: Cannot find service!`
-          );
+          this._toaster.open({
+            type: 'danger',
+            caption: `Status: ${status}`,
+            text: 'Cannot find service!',
+          });
         }
 
         if (err instanceof HttpErrorResponse && status === 401) {
-          console.error(
-            `Error => Status: ${status} , Message: Permission denied!`
-          );
+          this._toaster.open({
+            type: 'danger',
+            caption: `Status: ${status}`,
+            text: 'Permission denied!',
+          });
         }
-
-        console.error(
-          `Error => Status: ${status} , Message: Error while connecting to service!`
-        );
+        this._toaster.open({
+          type: 'danger',
+          caption: `Status: ${status}`,
+          text: 'Error while connecting to service!',
+        });
 
         return throwError(err);
       })
