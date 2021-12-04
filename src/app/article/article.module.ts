@@ -21,6 +21,5 @@ import { ArticleListComponent, LayoutComponent } from './components';
     // article,
     ArticleRoutingModule,
   ],
-  providers: [ArticleService],
 })
 export class ArticleModule {}
