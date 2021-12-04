@@ -4,12 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 // 3rd party
-import {
-  BehaviorSubject,
-  EMPTY,
-  Observable,
-  Subscription,
-} from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 // app
@@ -18,7 +13,9 @@ import { environment } from '@env/environment';
 import { LoginModel, RegisterModel, User } from '../interfaces';
 import { Toaster } from '@shared/toast-notification';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService extends SubscriptionManager {
   private readonly _baseUrl: string = environment.serviceBaseUrl;
   private _currentUser = new BehaviorSubject<User>(null);
