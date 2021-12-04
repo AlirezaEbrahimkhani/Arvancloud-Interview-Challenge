@@ -1,13 +1,18 @@
+// angular
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
+
+// 3'rd party
 import { Observable, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { catchError } from 'rxjs/operators';
+
+// app
 import { Toaster } from '@shared/toast-notification';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -24,15 +29,15 @@ export class HttpBaseService {
     return this._httpRequest(url, 'GET');
   }
 
-  post$(url: string, body: Object) {
+  public post$(url: string, body: Object) {
     return this._httpRequest(url, 'POST', body);
   }
 
-  put$(url: string, body: Object) {
+  public put$(url: string, body: Object) {
     return this._httpRequest(url, 'PUT', body);
   }
 
-  delete$(url: string) {
+  public delete$(url: string) {
     return this._httpRequest(url, 'DELETE');
   }
 
