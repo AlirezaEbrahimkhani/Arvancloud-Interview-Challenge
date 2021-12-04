@@ -7,11 +7,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // app
 
 import { ArticleRoutingModule } from './article.routing';
-import { ArticleService } from './shared';
-import { ArticleListComponent, LayoutComponent } from './components';
+import {
+  ArticleFormComponent,
+  ArticleListComponent,
+  LayoutComponent,
+} from './components';
+import { ConfirmationDialogModule } from '@shared/confirmation-dialog';
 
 @NgModule({
-  declarations: [LayoutComponent, ArticleListComponent],
+  declarations: [LayoutComponent, ArticleListComponent, ArticleFormComponent],
   imports: [
     // angular
     CommonModule,
@@ -20,6 +24,9 @@ import { ArticleListComponent, LayoutComponent } from './components';
 
     // article,
     ArticleRoutingModule,
+
+    // shared
+    ConfirmationDialogModule,
   ],
 })
 export class ArticleModule {}
