@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ArticleRoutingModule } from './article.routing';
 import { ArticleRoutingComponent } from './article-routing.component';
-import { ToastNotificationsModule } from '@shared/toast-notification';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ArticleService } from './shared';
 
 @NgModule({
   declarations: [ArticleRoutingComponent],
@@ -13,11 +13,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
 
-    // shared
-    ToastNotificationsModule,
-
     // article,
     ArticleRoutingModule,
   ],
+  providers: [ArticleService],
 })
 export class ArticleModule {}
