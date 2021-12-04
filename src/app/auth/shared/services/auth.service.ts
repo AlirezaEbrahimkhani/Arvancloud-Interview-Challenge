@@ -4,12 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 // 3rd party
-import {
-  BehaviorSubject,
-  EMPTY,
-  Observable,
-  Subscription,
-} from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 // app
@@ -18,13 +13,19 @@ import { environment } from '@env/environment';
 import { LoginModel, RegisterModel, User } from '../interfaces';
 import { Toaster } from '@shared/toast-notification';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService extends SubscriptionManager {
   private readonly _baseUrl: string = environment.serviceBaseUrl;
-  private _currentUser = new BehaviorSubject<User>(null);
+  private _currentUser$ = new BehaviorSubject<User>(null);
 
   public get user(): Observable<User> {
-    return this._currentUser.asObservable();
+    return this._currentUser$.asObservable();
+  }
+
+  public set setCurrentUser(user: User) {
+    this._currentUser$.next(user);
   }
 
   constructor(
@@ -38,10 +39,11 @@ export class AuthService extends SubscriptionManager {
   public login(loginModel: LoginModel) {
     let loginSubscription: Subscription = this._httpClient
       .post<{ user: User }>(`${this._baseUrl}users/login`, { user: loginModel })
-      .pipe(catchError(this._handleLoginError))
+      .pipe(catchError((error) => this._handleLoginError(error)))
       .subscribe(({ user }) => {
-        this._currentUser.next(user);
+        this.setCurrentUser = user;
         localStorage.setItem('token', user.token);
+        localStorage.setItem('user', JSON.stringify(user));
         this._router.navigate(['/articles']);
       });
     this.addSubscription$('login', loginSubscription);
@@ -50,7 +52,7 @@ export class AuthService extends SubscriptionManager {
   public register(registerModel: RegisterModel) {
     let registerSubscription: Subscription = this._httpClient
       .post(`${this._baseUrl}users`, { user: registerModel })
-      .pipe(catchError(this._handleRegistrationError))
+      .pipe(catchError((error) => this._handleRegistrationError(error)))
       .subscribe(() => {
         this._router.navigate(['/login']);
       });
@@ -58,7 +60,7 @@ export class AuthService extends SubscriptionManager {
   }
 
   public logout() {
-    this._currentUser.next(null);
+    this.setCurrentUser = null;
     localStorage.removeItem('token');
     this._router.navigate(['/login']);
   }

@@ -55,11 +55,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             text: 'Permission denied!',
           });
         }
-        this._toaster.open({
-          type: 'danger',
-          caption: `Status: ${status}`,
-          text: 'Error while connecting to service!',
-        });
 
         return throwError(err);
       })

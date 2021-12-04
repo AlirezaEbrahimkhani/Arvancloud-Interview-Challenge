@@ -1,0 +1,65 @@
+.header {
+  display: flex;
+  background-color: var(--charcoal-grey);
+  justify-content: space-between;
+  padding: 10px 29.3px 10px 20px;
+  width: 100%;
+
+  .right-side {
+    display: flex;
+    align-items: center;
+    color: white;
+
+    .site-title {
+      font-size: 1.5rem;
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-bottom: 0;
+      margin-left: 20px;
+    }
+  }
+}
+
+.main {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 13%;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+
+  h4 {
+    font-size: 1.45rem;
+    color: white;
+    margin: 16px 20px;
+  }
+
+  a {
+    display: block;
+    padding: 11px 34px;
+    font-size: 1.15rem;
+    color: white;
+    text-decoration: none;
+
+    &.active {
+      background-color: var(--low-opacity-white);
+    }
+
+    &:hover:not(.active) {
+      background-color: var(--medium-opacity-white);
+    }
+  }
+}
+
+.content {
+  max-height: 90vh;
+  overflow: auto;
+  width: 83%;
+}

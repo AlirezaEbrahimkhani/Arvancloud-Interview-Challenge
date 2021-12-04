@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthRoutingComponent } from '@app/auth/auth-routing.component';
+import { ArticleListComponent, LayoutComponent } from './components';
+import { ArticleResolver } from './shared/resolvers/articles.resolver';
 
 const ROUTES: Routes = [
   {
     path: '',
-    component: AuthRoutingComponent,
-    children: [],
+    component: LayoutComponent,
+    children: [
+      {
+        path: '',
+        component: ArticleListComponent,
+        resolve: {
+          articles: ArticleResolver,
+        },
+      },
+    ],
   },
 ];
 

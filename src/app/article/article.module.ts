@@ -1,20 +1,22 @@
+// angular
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticleRoutingModule } from './article.routing';
-import { ArticleRoutingComponent } from './article-routing.component';
-import { ToastNotificationsModule } from '@shared/toast-notification';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+// app
+
+import { ArticleRoutingModule } from './article.routing';
+import { ArticleService } from './shared';
+import { ArticleListComponent, LayoutComponent } from './components';
+
 @NgModule({
-  declarations: [ArticleRoutingComponent],
+  declarations: [LayoutComponent, ArticleListComponent],
   imports: [
     // angular
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-
-    // shared
-    ToastNotificationsModule,
 
     // article,
     ArticleRoutingModule,

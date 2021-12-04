@@ -20,6 +20,5 @@ import { AuthService } from './shared';
     // auth
     AuthRoutingModule,
   ],
-  providers: [AuthService],
 })
 export class AuthModule {}
