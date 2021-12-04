@@ -39,6 +39,7 @@ export class AuthService extends SubscriptionManager {
       .subscribe(({ user }) => {
         this._currentUser.next(user);
         localStorage.setItem('token', user.token);
+        localStorage.setItem('user', JSON.stringify(user));
         this._router.navigate(['/articles']);
       });
     this.addSubscription$('login', loginSubscription);
