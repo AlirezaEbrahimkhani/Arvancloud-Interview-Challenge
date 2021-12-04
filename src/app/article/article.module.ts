@@ -7,11 +7,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // app
 
 import { ArticleRoutingModule } from './article.routing';
-import { ArticleService } from './shared';
-import { ArticleListComponent, LayoutComponent } from './components';
+import {
+  ArticleFormComponent,
+  ArticleListComponent,
+  LayoutComponent,
+} from './components';
 
 @NgModule({
-  declarations: [LayoutComponent, ArticleListComponent],
+  declarations: [LayoutComponent, ArticleListComponent, ArticleFormComponent],
   imports: [
     // angular
     CommonModule,
