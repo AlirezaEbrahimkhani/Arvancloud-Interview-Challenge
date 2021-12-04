@@ -10,11 +10,12 @@ import { Toast } from './toast';
 
 const DEFAULT_CONFIG: ToastConfig = {
   autoClose: true,
-  duration: 8000,
+  duration: 2500,
   type: 'light',
   position: 'top-right',
   direction: 'rtl',
   component: BasicToastContentComponent,
+  preventDuplicates: true,
 };
 
 @Injectable({
