@@ -22,4 +22,8 @@ export class ArticleService {
   getAllArticles(): Observable<Article[]> {
     return this._httpBase.get$('articles');
   }
+
+  getArticleBySlug(slugName: string): Observable<Article> {
+    return this._httpBase.get$(`articles/${slugName}`);
+  }
 }
