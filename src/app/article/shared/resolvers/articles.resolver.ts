@@ -8,7 +8,7 @@ import { Article } from '../interfaces';
 @Injectable({
   providedIn: 'root',
 })
-export class ArticleResolver implements Resolve<Article[]> {
+export class ArticlesResolver implements Resolve<Article[]> {
   constructor(private readonly _articleService: ArticleService) {}
 
   resolve(): Observable<Article[]> {
