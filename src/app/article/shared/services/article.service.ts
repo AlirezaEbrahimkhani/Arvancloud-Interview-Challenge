@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // app
-import { Article } from '../interfaces';
+import { Article, CreateArticleDTO } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,9 @@ export class ArticleService {
   constructor(private readonly _httpBase: HttpBaseService) {}
 
   getAllArticles(): Observable<Article[]> {
-    return this._httpBase.get$('articles');
+    return this._httpBase
+      .get$('articles')
+      .pipe(map(({ articles }: any) => (this.setArticles = articles)));
   }
 
   getArticleBySlug(slugName: string): Observable<Article> {
@@ -33,5 +35,17 @@ export class ArticleService {
 
   getTagList() {
     return this._httpBase.get$('tags').pipe(map(({ tags }) => tags));
+  }
+
+  createArticle(body: CreateArticleDTO) {
+    return this._httpBase.post$('articles', { article: body });
+  }
+
+  updateArticle(slug: string, body: CreateArticleDTO) {
+    return this._httpBase.put$(`articles/${slug}`, { article: body });
+  }
+
+  deleteArticle(slug: string) {
+    return this._httpBase.delete$(`articles/${slug}`);
   }
 }
