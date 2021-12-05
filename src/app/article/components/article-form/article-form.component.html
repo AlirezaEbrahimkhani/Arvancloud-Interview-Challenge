@@ -8,12 +8,24 @@
     <div class="mb-3">
       <label for="title" class="form-label"> Title </label>
       <input
+        [ngClass]="{
+          ' is-invalid':
+            form.get('title').errors && form.get('title').hasError('required')
+        }"
         type="text"
         class="form-control"
         id="title"
         formControlName="title"
         placeholder="Title"
       />
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          form.get('title').errors && form.get('title').hasError('required')
+        "
+      >
+        This field is required !
+      </div>
     </div>
     <div class="mb-3">
       <label for="description" class="form-label"> Description </label>
