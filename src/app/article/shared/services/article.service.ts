@@ -1,6 +1,10 @@
+// angular
 import { Injectable } from '@angular/core';
 import { HttpBaseService } from '@app/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+// app
 import { Article } from '../interfaces';
 
 @Injectable({
@@ -25,5 +29,9 @@ export class ArticleService {
 
   getArticleBySlug(slugName: string): Observable<Article> {
     return this._httpBase.get$(`articles/${slugName}`);
+  }
+
+  getTagList() {
+    return this._httpBase.get$('tags').pipe(map(({ tags }) => tags));
   }
 }
