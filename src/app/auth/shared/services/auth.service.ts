@@ -54,6 +54,11 @@ export class AuthService extends SubscriptionManager {
       .post(`${this._baseUrl}users`, { user: registerModel })
       .pipe(catchError((error) => this._handleRegistrationError(error)))
       .subscribe(() => {
+        this._toaster.open({
+          type: 'success',
+          caption: 'Well done!',
+          text: 'Registration successful !',
+        });
         this._router.navigate(['/login']);
       });
     this.addSubscription$('register', registerSubscription);
