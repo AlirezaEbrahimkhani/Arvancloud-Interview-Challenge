@@ -1,5 +1,11 @@
 // angular
-import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -11,11 +17,13 @@ import {
   ConfirmationDialogService,
 } from '@shared/confirmation-dialog';
 import { Toaster } from '@shared/toast-notification';
+import { Pagination } from '@app/article/shared/interfaces';
 
 @Component({
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
   styleUrls: ['./article-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticleListComponent
   extends SubscriptionManager
@@ -24,6 +32,7 @@ export class ArticleListComponent
   @ViewChild('confirmationDialog', { static: true })
   confirmationDialog: ConfirmationDialogComponent;
   private _dropdown;
+  pagination: Pagination = { pageSize: 5, pageIndex: 0 };
 
   constructor(
     public readonly articleService: ArticleService,
@@ -56,6 +65,26 @@ export class ArticleListComponent
         if (res) this._deleteArticle(slug);
       });
     this.addSubscription$('dialogResult', dialogResult);
+  }
+
+  calculatePaginationNumber(pageNumber: number) {
+    let divideResult = pageNumber / 5;
+    return Array(Math.ceil(divideResult));
+  }
+
+  onChangePagination(index: number) {
+    this.pagination = {
+      pageIndex: index,
+      pageSize: 5,
+    };
+  }
+
+  onNextPage() {
+    this.pagination.pageIndex++;
+  }
+
+  onPreviousPage() {
+    this.pagination.pageIndex--;
   }
 
   private _closeDropDown(dropdown: any) {
