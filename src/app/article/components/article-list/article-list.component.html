@@ -11,7 +11,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let article of articleService.articles | async; let i = index">
+    <tr
+      *ngFor="
+        let article of articleService.articles
+          | async
+          | slice
+            : pagination.pageSize * pagination.pageIndex
+            : pagination.pageSize * (pagination.pageIndex + 1);
+        let i = index
+      "
+    >
       <td>{{ i + 1 }}</td>
       <td>{{ article.title }}</td>
       <td>{{ article?.author.username }}</td>
@@ -51,4 +60,26 @@
     </tr>
   </tbody>
 </table>
+<nav>
+  <ul class="pagination">
+    <li class="page-item pointer-cursor">
+      <a class="page-link" (click)="onPreviousPage()"><</a>
+    </li>
+    <li
+      class="page-item pointer-cursor"
+      *ngFor="
+        let item of calculatePaginationNumber(
+          (articleService.articles | async).length
+        );
+        let i = index
+      "
+      (click)="onChangePagination(i)"
+    >
+      <a class="page-link">{{ i + 1 }}</a>
+    </li>
+    <li class="page-item pointer-cursor">
+      <a class="page-link" (click)="onNextPage()">></a>
+    </li>
+  </ul>
+</nav>
 <app-confirmation-dialog #confirmationDialog></app-confirmation-dialog>

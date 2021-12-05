@@ -23,3 +23,14 @@
 .show {
   display: block;
 }
+
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .pointer-cursor {
+    cursor: pointer;
+  }
+}
