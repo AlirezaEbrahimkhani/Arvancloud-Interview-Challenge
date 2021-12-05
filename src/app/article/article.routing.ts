@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ArticleResolver } from './shared/resolvers/articles.resolver';
 import {
   ArticleFormComponent,
   ArticleListComponent,
   LayoutComponent,
 } from './components';
+import {
+  ArticleEditResolver,
+  ArticlesResolver,
+  TagListResolver,
+} from './shared/resolvers';
 
 const ROUTES: Routes = [
   {
@@ -17,16 +21,22 @@ const ROUTES: Routes = [
         path: '',
         component: ArticleListComponent,
         resolve: {
-          articles: ArticleResolver,
+          articles: ArticlesResolver,
         },
       },
       {
         path: 'edit/:slug',
         component: ArticleFormComponent,
+        resolve: {
+          article: ArticleEditResolver,
+        },
       },
       {
         path: 'create',
         component: ArticleFormComponent,
+        resolve: {
+          tags: TagListResolver,
+        },
       },
     ],
   },

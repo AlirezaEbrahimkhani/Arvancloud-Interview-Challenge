@@ -15,3 +15,17 @@ table.table,
 .form-label {
   color: var(--charcoal-grey);
 }
+
+// scroll style
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #959595;
+  border-radius: 20px;
+}
