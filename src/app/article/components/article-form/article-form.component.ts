@@ -18,6 +18,7 @@ export class ArticleFormComponent
   implements OnInit
 {
   form: FormGroup;
+  tagListForm: FormGroup;
   tags: string[] = [];
   loading: boolean = false;
   isEditMode: boolean = false;
@@ -32,6 +33,10 @@ export class ArticleFormComponent
       title: [null, Validators.required],
       description: [null, Validators.required],
       body: [null, Validators.required],
+    });
+
+    this.tagListForm = this._formBuilder.group({
+      tagName: [null],
     });
   }
 
@@ -65,4 +70,10 @@ export class ArticleFormComponent
   }
 
   onArticleSubmit() {}
+
+  onSubmitTag() {
+    const { tagName } = this.tagListForm.value;
+    this.tags.push(tagName);
+    this.tagListForm.reset();
+  }
 }
