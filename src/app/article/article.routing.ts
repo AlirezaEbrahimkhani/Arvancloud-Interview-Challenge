@@ -6,7 +6,11 @@ import {
   ArticleListComponent,
   LayoutComponent,
 } from './components';
-import { ArticleEditResolver, ArticlesResolver } from './shared/resolvers';
+import {
+  ArticleEditResolver,
+  ArticlesResolver,
+  TagListResolver,
+} from './shared/resolvers';
 
 const ROUTES: Routes = [
   {
@@ -30,6 +34,9 @@ const ROUTES: Routes = [
       {
         path: 'create',
         component: ArticleFormComponent,
+        resolve: {
+          tags: TagListResolver,
+        },
       },
     ],
   },
