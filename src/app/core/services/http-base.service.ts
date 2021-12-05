@@ -58,7 +58,7 @@ export class HttpBaseService {
     switch (httpVerb) {
       case 'GET':
         return this._http
-          .get(URL)
+          .get(URL, { headers })
           .pipe(catchError((error) => this._errorHandler(error)));
       case 'POST':
         return this._http
