@@ -12,12 +12,6 @@ export class ArticlesResolver implements Resolve<Article[]> {
   constructor(private readonly _articleService: ArticleService) {}
 
   resolve(): Observable<Article[]> {
-    return this._articleService
-      .getAllArticles()
-      .pipe(
-        map(
-          ({ articles }: any) => (this._articleService.setArticles = articles)
-        )
-      );
+    return this._articleService.getAllArticles();
   }
 }
