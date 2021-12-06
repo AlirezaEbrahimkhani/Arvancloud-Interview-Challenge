@@ -34,8 +34,13 @@ export class AppComponent implements OnInit {
     const token = localStorage.getItem('token');
     const user: User = JSON.parse(localStorage.getItem('user'));
 
-    if (token && user) this._authService.setCurrentUser = user;
-    else this._router.navigate(['/login']);
+    if (token && user) {
+      this._authService.setCurrentUser = user;
+      this._authService.setUserLoggedIn = true;
+    } else {
+      this._authService.logout();
+      this._router.navigate(['/login']);
+    }
 
     // Handle resolver loading status
     this._showLoaderEvents$ = this._router.events.pipe(

@@ -19,6 +19,7 @@ import { Toaster } from '@shared/toast-notification';
 export class AuthService extends SubscriptionManager {
   private readonly _baseUrl: string = environment.serviceBaseUrl;
   private _currentUser$ = new BehaviorSubject<User>(null);
+  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
   public get user(): Observable<User> {
     return this._currentUser$.asObservable();
@@ -26,6 +27,14 @@ export class AuthService extends SubscriptionManager {
 
   public set setCurrentUser(user: User) {
     this._currentUser$.next(user);
+  }
+
+  public get isLoggedIn(): Observable<boolean> {
+    return this._isLoggedIn$.asObservable();
+  }
+
+  public set setUserLoggedIn(status: boolean) {
+    this._isLoggedIn$.next(status);
   }
 
   constructor(
@@ -42,6 +51,7 @@ export class AuthService extends SubscriptionManager {
       .pipe(catchError((error) => this._handleLoginError(error)))
       .subscribe(({ user }) => {
         this.setCurrentUser = user;
+        this.setUserLoggedIn = true;
         localStorage.setItem('token', user.token);
         localStorage.setItem('user', JSON.stringify(user));
         this._router.navigate(['/articles']);
@@ -66,6 +76,7 @@ export class AuthService extends SubscriptionManager {
 
   public logout() {
     this.setCurrentUser = null;
+    this.setUserLoggedIn = false;
     localStorage.removeItem('token');
     this._router.navigate(['/login']);
   }
