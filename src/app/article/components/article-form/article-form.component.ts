@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 // app
 import { ArticleService } from '@app/article/shared';
 import { CreateArticleDTO, SafeData } from '@app/article/shared/interfaces';
 import { SubscriptionManager } from '@app/core';
 import { Toaster } from '@shared/toast-notification';
-import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-article-form',
@@ -64,7 +64,16 @@ export class ArticleFormComponent
   }
 
   isDataSaved(): boolean {
-    return !this.form.dirty;
+    if (this._isAllFieldHasValue()) return false;
+    else return true;
+  }
+
+  private _isAllFieldHasValue() {
+    return (
+      this.form.get('title').value &&
+      this.form.get('description').value &&
+      this.form.get('body').value
+    );
   }
 
   private _getEditArticleData() {
