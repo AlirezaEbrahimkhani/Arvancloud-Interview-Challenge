@@ -1,13 +1,12 @@
-import { merge, Observable } from 'rxjs';
 import { ResolveEnd, ResolveStart, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { filter, mapTo } from 'rxjs/operators';
 import { AuthService } from './auth/shared';
 import { User } from './auth/shared/interfaces';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogService,
 } from '@shared/confirmation-dialog';
+import { LoadingBarService } from './core/modules';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,14 +16,11 @@ export class AppComponent implements OnInit {
   @ViewChild('confirmationDialog', { static: true })
   confirmationDialog: ConfirmationDialogComponent;
 
-  isLoading$!: Observable<boolean>;
-  private _showLoaderEvents$!: Observable<boolean>;
-  private _hideLoaderEvents$!: Observable<boolean>;
-
   constructor(
     private readonly _router: Router,
     private readonly _authService: AuthService,
-    private _confirmationDialogService: ConfirmationDialogService
+    private _confirmationDialogService: ConfirmationDialogService,
+    private readonly _loadingBarService: LoadingBarService
   ) {}
 
   ngOnInit(): void {
@@ -43,14 +39,9 @@ export class AppComponent implements OnInit {
     }
 
     // Handle resolver loading status
-    this._showLoaderEvents$ = this._router.events.pipe(
-      filter((e) => e instanceof ResolveStart),
-      mapTo(true)
-    );
-    this._hideLoaderEvents$ = this._router.events.pipe(
-      filter((e) => e instanceof ResolveEnd),
-      mapTo(false)
-    );
-    this.isLoading$ = merge(this._hideLoaderEvents$, this._showLoaderEvents$);
+    this._router.events.subscribe((event) => {
+      if (event instanceof ResolveStart) this._loadingBarService.show();
+      if (event instanceof ResolveEnd) this._loadingBarService.hide();
+    });
   }
 }
