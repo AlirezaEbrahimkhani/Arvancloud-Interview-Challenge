@@ -1,21 +1,12 @@
 // angular
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 // app
 import { ArticleService } from '@app/article/shared';
 import { SubscriptionManager } from '@app/core';
-import {
-  ConfirmationDialogComponent,
-  ConfirmationDialogService,
-} from '@shared/confirmation-dialog';
+import { ConfirmationDialogService } from '@shared/confirmation-dialog';
 import { Toaster } from '@shared/toast-notification';
 import { Pagination } from '@app/article/shared/interfaces';
 
@@ -25,12 +16,7 @@ import { Pagination } from '@app/article/shared/interfaces';
   styleUrls: ['./article-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleListComponent
-  extends SubscriptionManager
-  implements OnInit
-{
-  @ViewChild('confirmationDialog', { static: true })
-  confirmationDialog: ConfirmationDialogComponent;
+export class ArticleListComponent extends SubscriptionManager {
   private _dropdown;
   pagination: Pagination = { pageSize: 5, pageIndex: 0 };
 
@@ -41,10 +27,6 @@ export class ArticleListComponent
     private _confirmationDialogService: ConfirmationDialogService
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    this._confirmationDialogService.register(this.confirmationDialog);
   }
 
   toggleDropdown(dropdown) {
