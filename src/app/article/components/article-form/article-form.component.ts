@@ -6,7 +6,7 @@ import { Subscription, throwError } from 'rxjs';
 
 // app
 import { ArticleService } from '@app/article/shared';
-import { CreateArticleDTO } from '@app/article/shared/interfaces';
+import { CreateArticleDTO, SafeData } from '@app/article/shared/interfaces';
 import { SubscriptionManager } from '@app/core';
 import { Toaster } from '@shared/toast-notification';
 import { catchError } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ArticleFormComponent
   extends SubscriptionManager
-  implements OnInit
+  implements OnInit, SafeData
 {
   form: FormGroup;
   tagListForm: FormGroup;
@@ -61,6 +61,10 @@ export class ArticleFormComponent
     const { tagName } = this.tagListForm.value;
     if (tagName) this.tags.push(tagName);
     this.tagListForm.reset();
+  }
+
+  isDataSaved(): boolean {
+    return !this.form.dirty;
   }
 
   private _getEditArticleData() {
