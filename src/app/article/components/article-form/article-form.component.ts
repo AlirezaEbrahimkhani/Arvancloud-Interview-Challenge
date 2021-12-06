@@ -64,16 +64,7 @@ export class ArticleFormComponent
   }
 
   isDataSaved(): boolean {
-    if (this._isAllFieldHasValue()) return false;
-    else return true;
-  }
-
-  private _isAllFieldHasValue() {
-    return (
-      this.form.get('title').value &&
-      this.form.get('description').value &&
-      this.form.get('body').value
-    );
+    return this.form.dirty;
   }
 
   private _getEditArticleData() {
@@ -143,6 +134,7 @@ export class ArticleFormComponent
       )
       .subscribe((response) => {
         if (response) {
+          this.form.reset();
           this._toaster.open({
             type: 'success',
             caption: 'Well done!',
