@@ -44,7 +44,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             caption: `Status: ${status}`,
             text: 'Server connection error!',
           });
-          return EMPTY;
         }
 
         if (err instanceof HttpErrorResponse && status === 404) {
@@ -53,7 +52,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             caption: `Status: ${status}`,
             text: 'Cannot find service!',
           });
-          return EMPTY;
         }
 
         if (err instanceof HttpErrorResponse && status === 403) {
@@ -62,7 +60,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             caption: `Status: ${status}`,
             text: 'You do not have permission !',
           });
-          return EMPTY;
         }
 
         if (err instanceof HttpErrorResponse && status === 401) {
@@ -71,7 +68,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             caption: `Status: ${status}`,
             text: 'Permission denied!',
           });
-          return EMPTY;
         }
 
         return throwError(err);
