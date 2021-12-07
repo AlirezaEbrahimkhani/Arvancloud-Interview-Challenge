@@ -10,6 +10,7 @@ import { ArticleService } from '@app/article/shared';
 import { CreateArticleDTO, SafeData } from '@app/article/shared/interfaces';
 import { SubscriptionManager } from '@app/core';
 import { Toaster } from '@shared/toast-notification';
+import { LoadingBarService } from '@app/core/modules';
 
 @Component({
   selector: 'app-article-form',
@@ -31,7 +32,8 @@ export class ArticleFormComponent
     private readonly _route: ActivatedRoute,
     private readonly _articleService: ArticleService,
     private readonly _toaster: Toaster,
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _loadingBarService: LoadingBarService
   ) {
     super();
     this.form = this._formBuilder.group({
@@ -92,6 +94,7 @@ export class ArticleFormComponent
   }
 
   private _updateArticle(formValue: CreateArticleDTO) {
+    this._loadingBarService.show();
     let body = { ...formValue, tagList: this.tags };
     const slug = this._route.snapshot.paramMap.get('slug');
     this._articleService
@@ -103,11 +106,14 @@ export class ArticleFormComponent
             caption: 'Error ...',
             text: 'An error occurred while updating article !',
           });
+          this._loadingBarService.hide();
           return throwError(error);
         })
       )
       .subscribe((response) => {
         if (response) {
+          this._loadingBarService.hide();
+          this.form.reset();
           this._toaster.open({
             type: 'success',
             caption: 'Well done!',
@@ -119,6 +125,7 @@ export class ArticleFormComponent
   }
 
   private _createArticle(formValue: CreateArticleDTO) {
+    this._loadingBarService.show();
     let body = { ...formValue, tagList: this.tags };
     this._articleService
       .createArticle(body)
@@ -129,12 +136,14 @@ export class ArticleFormComponent
             caption: 'Error ...',
             text: 'An error occurred while creating article !',
           });
+          this._loadingBarService.hide();
           return throwError(error);
         })
       )
       .subscribe((response) => {
         if (response) {
           this.form.reset();
+          this._loadingBarService.hide();
           this._toaster.open({
             type: 'success',
             caption: 'Well done!',

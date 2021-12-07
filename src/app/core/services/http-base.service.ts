@@ -13,6 +13,7 @@ import { catchError } from 'rxjs/operators';
 // app
 import { Toaster } from '@shared/toast-notification';
 import { environment } from '@env/environment';
+import { LoadingBarService } from '../modules';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,8 @@ export class HttpBaseService {
 
   constructor(
     private readonly _http: HttpClient,
-    private readonly _toaster: Toaster
+    private readonly _toaster: Toaster,
+    private readonly _loadingBarService: LoadingBarService
   ) {}
 
   public get$<R>(url: string): Observable<R> {
@@ -82,6 +84,7 @@ export class HttpBaseService {
       caption: `Status: ${status}`,
       text: `${message}`,
     });
+    this._loadingBarService.hide();
     return throwError(error);
   }
 }

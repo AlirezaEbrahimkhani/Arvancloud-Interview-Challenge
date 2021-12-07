@@ -9,6 +9,7 @@ import { SubscriptionManager } from '@app/core';
 import { ConfirmationDialogService } from '@shared/confirmation-dialog';
 import { Toaster } from '@shared/toast-notification';
 import { Pagination } from '@app/article/shared/interfaces';
+import { LoadingBarService } from '@app/core/modules';
 
 @Component({
   selector: 'app-article-list',
@@ -24,7 +25,8 @@ export class ArticleListComponent extends SubscriptionManager {
     public readonly articleService: ArticleService,
     private readonly _renderer: Renderer2,
     private readonly _toaster: Toaster,
-    private _confirmationDialogService: ConfirmationDialogService
+    private _confirmationDialogService: ConfirmationDialogService,
+    private readonly _loadingBarService: LoadingBarService
   ) {
     super();
   }
@@ -78,6 +80,7 @@ export class ArticleListComponent extends SubscriptionManager {
   }
 
   private _deleteArticle(slug: string) {
+    this._loadingBarService.show();
     let deleteArticleSubscription: Subscription = this.articleService
       .deleteArticle(slug)
       .subscribe(() => this._deleteArticleResponseHandler());
@@ -85,6 +88,7 @@ export class ArticleListComponent extends SubscriptionManager {
   }
 
   private _deleteArticleResponseHandler() {
+    this._loadingBarService.hide();
     this._toaster.open({
       type: 'success',
       text: 'Article deleted successfully !',
@@ -93,8 +97,10 @@ export class ArticleListComponent extends SubscriptionManager {
   }
 
   private _reloadArticleTableData() {
-    this.articleService
-      .getAllArticles()
-      .subscribe((articles) => (this.articleService.setArticles = articles));
+    this._loadingBarService.show();
+    this.articleService.getAllArticles().subscribe((articles) => {
+      this.articleService.setArticles = articles;
+      this._loadingBarService.hide();
+    });
   }
 }
