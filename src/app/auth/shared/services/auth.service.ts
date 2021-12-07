@@ -52,14 +52,7 @@ export class AuthService extends SubscriptionManager {
     let loginSubscription: Subscription = this._httpClient
       .post<{ user: User }>(`${this._baseUrl}users/login`, { user: loginModel })
       .pipe(catchError((error) => this._handleLoginError(error)))
-      .subscribe(({ user }) => {
-        this._loadingBarService.hide();
-        this.setCurrentUser = user;
-        this.setUserLoggedIn = true;
-        localStorage.setItem('token', user.token);
-        localStorage.setItem('user', JSON.stringify(user));
-        this._router.navigate(['/articles']);
-      });
+      .subscribe(({ user }) => this._handleLoginActions(user));
     this.addSubscription$('login', loginSubscription);
   }
 
@@ -68,15 +61,7 @@ export class AuthService extends SubscriptionManager {
     let registerSubscription: Subscription = this._httpClient
       .post(`${this._baseUrl}users`, { user: registerModel })
       .pipe(catchError((error) => this._handleRegistrationError(error)))
-      .subscribe(() => {
-        this._loadingBarService.hide();
-        this._toaster.open({
-          type: 'success',
-          caption: 'Well done!',
-          text: 'Registration successful !',
-        });
-        this._router.navigate(['/login']);
-      });
+      .subscribe(() => this._handleRegisterActions());
     this.addSubscription$('register', registerSubscription);
   }
 
@@ -86,6 +71,25 @@ export class AuthService extends SubscriptionManager {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     this._router.navigate(['/login']);
+  }
+
+  private _handleRegisterActions() {
+    this._loadingBarService.hide();
+    this._toaster.open({
+      type: 'success',
+      caption: 'Well done!',
+      text: 'Registration successful !',
+    });
+    this._router.navigate(['/login']);
+  }
+
+  private _handleLoginActions(user: User) {
+    this._loadingBarService.hide();
+    this.setCurrentUser = user;
+    this.setUserLoggedIn = true;
+    localStorage.setItem('token', user.token);
+    localStorage.setItem('user', JSON.stringify(user));
+    this._router.navigate(['/articles']);
   }
 
   private _handleLoginError(error: HttpErrorResponse) {

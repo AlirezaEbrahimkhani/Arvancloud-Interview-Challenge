@@ -56,10 +56,12 @@
 
       &.active {
         background-color: var(--low-opacity-white);
+        border-radius: 5px;
       }
 
       &:hover:not(.active) {
         background-color: var(--medium-opacity-white);
+        border-radius: 5px;
       }
     }
   }
