@@ -18,7 +18,8 @@
       "@shared/*": ["src/app/shared/*"],
       "@e2e/*": ["e2e/*"],
       "@app/*": ["src/app/*"],
-      "@core/*": ["src/app/core/*"]
+      "@core/*": ["src/app/core/*"],
+      "@auth/*":["src/app/auth/*"]
     }
   }
 }

@@ -1,12 +1,15 @@
+// angular
 import { ResolveEnd, ResolveStart, Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from './auth/shared';
-import { User } from './auth/shared/interfaces';
+
+// app
+import { User } from '@auth/shared/interfaces';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogService,
 } from '@shared/confirmation-dialog';
-import { LoadingBarService } from './core/modules';
+import { LoadingBarService } from '@core/modules';
+import { AuthService } from '@auth/shared';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

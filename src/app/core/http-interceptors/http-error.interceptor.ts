@@ -1,3 +1,4 @@
+// angular
 import { Injectable } from '@angular/core';
 import {
   HttpEvent,
@@ -6,12 +7,16 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
+
+// 3'rd party
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+// app
 import { Toaster } from '@shared/toast-notification';
 import { LoadingBarService } from '../modules';
 
-/** Passes HttpErrorResponse to application-wide error handler */
+/* Passes HttpErrorResponse to application-wide error handler */
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {

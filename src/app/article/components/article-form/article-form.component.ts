@@ -2,6 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+
+// 3'rd party
 import { Subscription, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -36,15 +39,7 @@ export class ArticleFormComponent
     private readonly _loadingBarService: LoadingBarService
   ) {
     super();
-    this.form = this._formBuilder.group({
-      title: [null, Validators.required],
-      description: [null],
-      body: [null],
-    });
-
-    this.tagListForm = this._formBuilder.group({
-      tagName: [null],
-    });
+    this._initForms();
   }
 
   ngOnInit(): void {
@@ -67,6 +62,18 @@ export class ArticleFormComponent
 
   isDataSaved(): boolean {
     return this.form.dirty;
+  }
+
+  private _initForms() {
+    this.form = this._formBuilder.group({
+      title: [null, Validators.required],
+      description: [null],
+      body: [null],
+    });
+
+    this.tagListForm = this._formBuilder.group({
+      tagName: [null],
+    });
   }
 
   private _getEditArticleData() {
@@ -99,28 +106,9 @@ export class ArticleFormComponent
     const slug = this._route.snapshot.paramMap.get('slug');
     this._articleService
       .updateArticle(slug, body)
-      .pipe(
-        catchError((error) => {
-          this._toaster.open({
-            type: 'danger',
-            caption: 'Error ...',
-            text: 'An error occurred while updating article !',
-          });
-          this._loadingBarService.hide();
-          return throwError(error);
-        })
-      )
+      .pipe(catchError((error) => this._handleUpdateArticleError(error)))
       .subscribe((response) => {
-        if (response) {
-          this._loadingBarService.hide();
-          this.form.reset();
-          this._toaster.open({
-            type: 'success',
-            caption: 'Well done!',
-            text: 'Article updated successfully !',
-          });
-          this._router.navigate(['/articles']);
-        }
+        if (response) this._handleUpdateArticleAction();
       });
   }
 
@@ -129,28 +117,51 @@ export class ArticleFormComponent
     let body = { ...formValue, tagList: this.tags };
     this._articleService
       .createArticle(body)
-      .pipe(
-        catchError((error) => {
-          this._toaster.open({
-            type: 'danger',
-            caption: 'Error ...',
-            text: 'An error occurred while creating article !',
-          });
-          this._loadingBarService.hide();
-          return throwError(error);
-        })
-      )
+      .pipe(catchError((error) => this._handleCreateArticleError(error)))
       .subscribe((response) => {
-        if (response) {
-          this.form.reset();
-          this._loadingBarService.hide();
-          this._toaster.open({
-            type: 'success',
-            caption: 'Well done!',
-            text: 'Article created successfully !',
-          });
-          this._router.navigate(['/articles']);
-        }
+        if (response) this._handleCreateArticleAction();
       });
+  }
+
+  private _handleCreateArticleAction() {
+    this.form.reset();
+    this._loadingBarService.hide();
+    this._toaster.open({
+      type: 'success',
+      caption: 'Well done!',
+      text: 'Article created successfully !',
+    });
+    this._router.navigate(['/articles']);
+  }
+
+  private _handleUpdateArticleAction() {
+    this._loadingBarService.hide();
+    this.form.reset();
+    this._toaster.open({
+      type: 'success',
+      caption: 'Well done!',
+      text: 'Article updated successfully !',
+    });
+    this._router.navigate(['/articles']);
+  }
+
+  private _handleUpdateArticleError(error: HttpErrorResponse) {
+    this._toaster.open({
+      type: 'danger',
+      caption: 'Error ...',
+      text: 'An error occurred while updating article !',
+    });
+    this._loadingBarService.hide();
+    return throwError(error);
+  }
+
+  private _handleCreateArticleError(error: HttpErrorResponse) {
+    this._toaster.open({
+      type: 'danger',
+      caption: 'Error ...',
+      text: 'An error occurred while creating article !',
+    });
+    this._loadingBarService.hide();
+    return throwError(error);
   }
 }
