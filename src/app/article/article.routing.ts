@@ -6,6 +6,7 @@ import {
   ArticleListComponent,
   LayoutComponent,
 } from './components';
+import { FormGuard } from './shared/guards';
 import {
   ArticleEditResolver,
   ArticlesResolver,
@@ -30,6 +31,7 @@ const ROUTES: Routes = [
         resolve: {
           article: ArticleEditResolver,
         },
+        canDeactivate: [FormGuard],
       },
       {
         path: 'create',
@@ -37,6 +39,7 @@ const ROUTES: Routes = [
         resolve: {
           tags: TagListResolver,
         },
+        canDeactivate: [FormGuard],
       },
     ],
   },

@@ -10,24 +10,19 @@
       </button>
     </div>
   </div>
-
   <div class="row main">
-    <div class="col-2">
-      <div class="sidebar bg-primary">
-        <h4>Post</h4>
-        <a
-          routerLink="/articles"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          All Articles
-        </a>
-        <a routerLink="/articles/create" routerLinkActive="active"
-          >New Article</a
-        >
-      </div>
+    <div class="sidebar bg-primary">
+      <h4>Post</h4>
+      <a
+        routerLink="/articles"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        All Articles
+      </a>
+      <a routerLink="/articles/create" routerLinkActive="active">New Article</a>
     </div>
-    <div class="col-10 content p-0">
+    <div class="content p-0">
       <router-outlet></router-outlet>
     </div>
   </div>

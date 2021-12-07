@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { CoreModule } from '@core/core.module';
 import { ToastNotificationsModule } from '@shared/toast-notification';
+import { ConfirmationDialogModule } from '@shared/confirmation-dialog';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,6 +23,7 @@ import { ToastNotificationsModule } from '@shared/toast-notification';
 
     // shared
     ToastNotificationsModule,
+    ConfirmationDialogModule,
   ],
   bootstrap: [AppComponent],
 })

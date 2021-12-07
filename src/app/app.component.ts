@@ -1,41 +1,47 @@
-import { merge, Observable } from 'rxjs';
 import { ResolveEnd, ResolveStart, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { filter, mapTo } from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from './auth/shared';
 import { User } from './auth/shared/interfaces';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogService,
+} from '@shared/confirmation-dialog';
+import { LoadingBarService } from './core/modules';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  isLoading$!: Observable<boolean>;
-  private _showLoaderEvents$!: Observable<boolean>;
-  private _hideLoaderEvents$!: Observable<boolean>;
+  @ViewChild('confirmationDialog', { static: true })
+  confirmationDialog: ConfirmationDialogComponent;
 
   constructor(
     private readonly _router: Router,
-    private readonly _authService: AuthService
+    private readonly _authService: AuthService,
+    private _confirmationDialogService: ConfirmationDialogService,
+    private readonly _loadingBarService: LoadingBarService
   ) {}
 
   ngOnInit(): void {
+    this._confirmationDialogService.register(this.confirmationDialog);
+
     // Restore user information from localStorage
     const token = localStorage.getItem('token');
     const user: User = JSON.parse(localStorage.getItem('user'));
 
-    if (token && user) this._authService.setCurrentUser = user;
-    else this._router.navigate(['/login']);
+    if (token && user) {
+      this._authService.setCurrentUser = user;
+      this._authService.setUserLoggedIn = true;
+    } else {
+      this._authService.logout();
+      this._router.navigate(['/login']);
+    }
 
     // Handle resolver loading status
-    this._showLoaderEvents$ = this._router.events.pipe(
-      filter((e) => e instanceof ResolveStart),
-      mapTo(true)
-    );
-    this._hideLoaderEvents$ = this._router.events.pipe(
-      filter((e) => e instanceof ResolveEnd),
-      mapTo(false)
-    );
-    this.isLoading$ = merge(this._hideLoaderEvents$, this._showLoaderEvents$);
+    this._router.events.subscribe((event) => {
+      if (event instanceof ResolveStart) this._loadingBarService.show();
+      if (event instanceof ResolveEnd) this._loadingBarService.hide();
+    });
   }
 }

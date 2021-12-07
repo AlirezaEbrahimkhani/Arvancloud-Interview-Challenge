@@ -1,23 +1,15 @@
 // angular
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 // app
 import { ArticleService } from '@app/article/shared';
 import { SubscriptionManager } from '@app/core';
-import {
-  ConfirmationDialogComponent,
-  ConfirmationDialogService,
-} from '@shared/confirmation-dialog';
+import { ConfirmationDialogService } from '@shared/confirmation-dialog';
 import { Toaster } from '@shared/toast-notification';
 import { Pagination } from '@app/article/shared/interfaces';
+import { LoadingBarService } from '@app/core/modules';
 
 @Component({
   selector: 'app-article-list',
@@ -25,12 +17,7 @@ import { Pagination } from '@app/article/shared/interfaces';
   styleUrls: ['./article-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleListComponent
-  extends SubscriptionManager
-  implements OnInit
-{
-  @ViewChild('confirmationDialog', { static: true })
-  confirmationDialog: ConfirmationDialogComponent;
+export class ArticleListComponent extends SubscriptionManager {
   private _dropdown;
   pagination: Pagination = { pageSize: 5, pageIndex: 0 };
 
@@ -38,13 +25,10 @@ export class ArticleListComponent
     public readonly articleService: ArticleService,
     private readonly _renderer: Renderer2,
     private readonly _toaster: Toaster,
-    private _confirmationDialogService: ConfirmationDialogService
+    private _confirmationDialogService: ConfirmationDialogService,
+    private readonly _loadingBarService: LoadingBarService
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    this._confirmationDialogService.register(this.confirmationDialog);
   }
 
   toggleDropdown(dropdown) {
@@ -96,6 +80,7 @@ export class ArticleListComponent
   }
 
   private _deleteArticle(slug: string) {
+    this._loadingBarService.show();
     let deleteArticleSubscription: Subscription = this.articleService
       .deleteArticle(slug)
       .subscribe(() => this._deleteArticleResponseHandler());
@@ -103,6 +88,7 @@ export class ArticleListComponent
   }
 
   private _deleteArticleResponseHandler() {
+    this._loadingBarService.hide();
     this._toaster.open({
       type: 'success',
       text: 'Article deleted successfully !',
@@ -111,8 +97,10 @@ export class ArticleListComponent
   }
 
   private _reloadArticleTableData() {
-    this.articleService
-      .getAllArticles()
-      .subscribe((articles) => (this.articleService.setArticles = articles));
+    this._loadingBarService.show();
+    this.articleService.getAllArticles().subscribe((articles) => {
+      this.articleService.setArticles = articles;
+      this._loadingBarService.hide();
+    });
   }
 }

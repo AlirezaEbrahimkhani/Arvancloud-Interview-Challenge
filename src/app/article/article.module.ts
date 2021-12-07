@@ -12,7 +12,6 @@ import {
   ArticleListComponent,
   LayoutComponent,
 } from './components';
-import { ConfirmationDialogModule } from '@shared/confirmation-dialog';
 
 @NgModule({
   declarations: [LayoutComponent, ArticleListComponent, ArticleFormComponent],
@@ -24,9 +23,6 @@ import { ConfirmationDialogModule } from '@shared/confirmation-dialog';
 
     // article,
     ArticleRoutingModule,
-
-    // shared
-    ConfirmationDialogModule,
   ],
 })
 export class ArticleModule {}
