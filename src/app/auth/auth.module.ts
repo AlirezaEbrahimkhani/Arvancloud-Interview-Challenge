@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthRoutingComponent } from './auth-routing.component';
 import { AuthRoutingModule } from './auth.routing';
 import { LoginComponent, RegisterComponent } from './components';
-import { AuthService } from './shared';
 
 @NgModule({
   declarations: [AuthRoutingComponent, LoginComponent, RegisterComponent],
