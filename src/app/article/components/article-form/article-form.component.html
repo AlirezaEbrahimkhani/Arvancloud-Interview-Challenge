@@ -1,60 +1,60 @@
-<h1 class="title">
-  <ng-container *ngIf="!isEditMode; else showEditTxt">New </ng-container>
-  <ng-template #showEditTxt>Edit </ng-template>
-  Article
-</h1>
-<div class="row form-row">
-  <form class="col-9 pr-4" [formGroup]="form" (ngSubmit)="onArticleSubmit()">
-    <div class="mb-3">
-      <label for="title" class="form-label"> Title </label>
-      <input
-        [ngClass]="{
-          ' is-invalid':
+<div class="article-form-wrapper">
+  <h1 class="title">
+    <ng-container *ngIf="!isEditMode; else showEditTxt">New </ng-container>
+    <ng-template #showEditTxt>Edit </ng-template>
+    Article
+  </h1>
+  <div class="row form-wrapper">
+    <form [formGroup]="form" (ngSubmit)="onArticleSubmit()">
+      <div class="mb-3">
+        <label for="title" class="form-label"> Title </label>
+        <input
+          [ngClass]="{
+            ' is-invalid':
+              form.get('title').errors && form.get('title').hasError('required')
+          }"
+          type="text"
+          class="form-control"
+          id="title"
+          formControlName="title"
+          placeholder="Title"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
             form.get('title').errors && form.get('title').hasError('required')
-        }"
-        type="text"
-        class="form-control"
-        id="title"
-        formControlName="title"
-        placeholder="Title"
-      />
-      <div
-        class="invalid-feedback"
-        *ngIf="
-          form.get('title').errors && form.get('title').hasError('required')
-        "
-      >
-        This field is required !
+          "
+        >
+          This field is required !
+        </div>
       </div>
-    </div>
-    <div class="mb-3">
-      <label for="description" class="form-label"> Description </label>
-      <input
-        type="text"
-        class="form-control"
-        id="description"
-        formControlName="description"
-        placeholder="Description"
-      />
-    </div>
-    <div class="mb-3">
-      <label for="body" class="form-label"> Body </label>
-      <textarea
-        class="form-control"
-        id="body"
-        rows="7"
-        formControlName="body"
-      ></textarea>
-    </div>
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="form.invalid || loading"
-    >
-      Submit
-    </button>
-  </form>
-  <div class="row form-row">
+      <div class="mb-3">
+        <label for="description" class="form-label"> Description </label>
+        <input
+          type="text"
+          class="form-control"
+          id="description"
+          formControlName="description"
+          placeholder="Description"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="body" class="form-label"> Body </label>
+        <textarea
+          class="form-control"
+          id="body"
+          rows="7"
+          formControlName="body"
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="form.invalid || loading"
+      >
+        Submit
+      </button>
+    </form>
     <form [formGroup]="tagListForm" (ngSubmit)="onSubmitTag()">
       <div class="mb-3">
         <label for="newTag" class="form-label">Tags</label>
