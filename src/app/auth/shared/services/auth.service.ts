@@ -83,6 +83,7 @@ export class AuthService extends SubscriptionManager {
   public logout() {
     this.setCurrentUser = null;
     this.setUserLoggedIn = false;
+    localStorage.removeItem('user');
     localStorage.removeItem('token');
     this._router.navigate(['/login']);
   }
