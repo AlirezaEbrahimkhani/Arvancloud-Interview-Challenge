@@ -17,7 +17,8 @@
           [ngClass]="{
             ' is-invalid':
               form.get('password').errors &&
-              form.get('password').hasError('required')
+              form.get('password').hasError('required') &&
+              form.get('password').touched
           }"
           type="password"
           class="form-control"
@@ -28,7 +29,8 @@
           class="invalid-feedback"
           *ngIf="
             form.get('password').errors &&
-            form.get('password').hasError('required')
+            form.get('password').hasError('required') &&
+            form.get('password').touched
           "
         >
           This field is required !

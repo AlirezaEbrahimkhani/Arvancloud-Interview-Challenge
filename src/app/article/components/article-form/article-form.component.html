@@ -11,7 +11,9 @@
         <input
           [ngClass]="{
             ' is-invalid':
-              form.get('title').errors && form.get('title').hasError('required')
+              form.get('title').errors &&
+              form.get('title').hasError('required') &&
+              form.get('title').touched
           }"
           type="text"
           class="form-control"
@@ -22,7 +24,9 @@
         <div
           class="invalid-feedback"
           *ngIf="
-            form.get('title').errors && form.get('title').hasError('required')
+            form.get('title').errors &&
+            form.get('title').hasError('required') &&
+            form.get('title').touched
           "
         >
           This field is required !
