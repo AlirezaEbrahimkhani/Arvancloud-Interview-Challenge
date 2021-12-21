@@ -10,7 +10,12 @@ import { catchError } from 'rxjs/operators';
 
 // app
 import { ArticleService } from '@app/article/shared';
-import { CreateArticleDTO, SafeData } from '@app/article/shared/interfaces';
+import {
+  Article,
+  CreateArticleDTO,
+  SafeData,
+  Tag,
+} from '@app/article/shared/interfaces';
 import { SubscriptionManager } from '@app/core';
 import { Toaster } from '@shared/toast-notification';
 import { LoadingBarService } from '@app/core/modules';
@@ -26,16 +31,16 @@ export class ArticleFormComponent
 {
   form: FormGroup;
   tagListForm: FormGroup;
-  tags: string[] = [];
+  tags: Tag[] = [];
   loading: boolean = false;
   isEditMode: boolean = false;
 
   constructor(
     private readonly _formBuilder: FormBuilder,
     private readonly _route: ActivatedRoute,
-    private readonly _articleService: ArticleService,
     private readonly _toaster: Toaster,
     private readonly _router: Router,
+    private readonly _articleService: ArticleService,
     private readonly _loadingBarService: LoadingBarService
   ) {
     super();
@@ -56,7 +61,7 @@ export class ArticleFormComponent
 
   onSubmitTag() {
     const { tagName } = this.tagListForm.value;
-    if (tagName) this.tags.push(tagName);
+    if (tagName) this.tags.push({ name: tagName, value: true });
     this.tagListForm.reset();
   }
 
@@ -78,14 +83,18 @@ export class ArticleFormComponent
 
   private _getEditArticleData() {
     let articleDataSubscription: Subscription = this._route.data.subscribe(
-      ({ article }) => this._fillDataIntoForm(article.article)
+      ({ article }) => {
+        let articleData = article[0].article;
+        let tags = article[1];
+        this._fillDataIntoForm(articleData, tags);
+      }
     );
     this.addSubscription$('editArticleData', articleDataSubscription);
   }
 
-  private _fillDataIntoForm(articleData) {
-    const { title, description, body, tagList } = articleData;
-    this.tags = tagList.sort() ?? [];
+  private _fillDataIntoForm(articleData, tags: string[]) {
+    const { title, description, body } = articleData;
+    this.tags = this._createEditTagList(articleData, tags);
     this.form.setValue({
       title,
       description,
@@ -95,14 +104,47 @@ export class ArticleFormComponent
 
   private _getTagList() {
     let tagListSubscription: Subscription = this._route.data.subscribe(
-      ({ tags }) => (this.tags = tags.sort())
+      ({ tags }) => {
+        let mapResult = tags.map((tag) => {
+          return { name: tag, value: false };
+        });
+        this.tags = this._sortTagListArray(mapResult);
+      }
     );
     this.addSubscription$('tagList', tagListSubscription);
   }
 
+  private _createEditTagList(article: Article, tags: string[]): Tag[] {
+    let mapResult = tags.map((tag) => {
+      return {
+        name: tag,
+        value: article.tagList.includes(tag),
+      };
+    });
+    return this._sortTagListArray(mapResult);
+  }
+
+  private _extractSelectedTags(tagList: Tag[]): string[] {
+    let result: string[] = [];
+    tagList.forEach((tag) => {
+      if (tag.value) result.push(tag.name);
+    });
+    return result;
+  }
+
+  private _sortTagListArray(tagList: Tag[]): Tag[] {
+    return tagList.sort((a, b) => {
+      let aName = a.name.toLowerCase(),
+        bName = b.name.toLowerCase();
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+      return 0;
+    });
+  }
+
   private _updateArticle(formValue: CreateArticleDTO) {
     this._loadingBarService.show();
-    let body = { ...formValue, tagList: this.tags };
+    let body = { ...formValue, tagList: this._extractSelectedTags(this.tags) };
     const slug = this._route.snapshot.paramMap.get('slug');
     this._articleService
       .updateArticle(slug, body)
@@ -114,7 +156,7 @@ export class ArticleFormComponent
 
   private _createArticle(formValue: CreateArticleDTO) {
     this._loadingBarService.show();
-    let body = { ...formValue, tagList: this.tags };
+    let body = { ...formValue, tagList: this._extractSelectedTags(this.tags) };
     this._articleService
       .createArticle(body)
       .pipe(catchError((error) => this._handleCreateArticleError(error)))

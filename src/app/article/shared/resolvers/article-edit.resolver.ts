@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { ArticleService } from '..';
-import { Article } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ArticleEditResolver implements Resolve<Article> {
+export class ArticleEditResolver implements Resolve<any> {
   constructor(private readonly _articleService: ArticleService) {}
-  resolve(route: ActivatedRouteSnapshot): Observable<Article> {
+  resolve(route: ActivatedRouteSnapshot): Observable<any> {
     const { params } = route;
-    return this._articleService.getArticleBySlug(params?.slug);
+    return forkJoin([
+      this._articleService.getArticleBySlug(params?.slug),
+      this._articleService.getTagList(),
+    ]);
   }
 }
